@@ -1,0 +1,23 @@
+{
+  "name": "arkamedia-backend",
+  "version": "1.0.0",
+  "description": "Project bootcamp team arka ",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon app",
+    "start": "node app"
+  },
+  "author": "Arkamedia",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mysql": "^2.17.1"
+  },
+  "devDependencies": {
+    "morgan": "^1.9.1",
+    "nodemon": "^1.19.4"
+  }
+}
