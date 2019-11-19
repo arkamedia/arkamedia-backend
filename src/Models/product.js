@@ -67,4 +67,17 @@ module.exports = {
 			// End Transaction
 		});
 	},
+	// @Method GET
+	getAllBookByType: book_type => {
+		return new Promise((resolve, reject) => {
+			const query = allQuery.getAllBookByType;
+			db.query(query, [book_type], (err, result) => {
+				if (!err) {
+					resolve(result);
+				} else {
+					reject(err);
+				}
+			});
+		});
+	},
 };

@@ -34,6 +34,7 @@ module.exports = {
 					res.status(404).json({ msg: 'No File Selected' });
 				} else {
 					try {
+						console.log(req.file.path);
 						cloudinary.uploader
 							.upload(req.file.path, { folder: 'arkamedia' })
 							.then(result => {
@@ -63,6 +64,7 @@ module.exports = {
 									import: req.body.import,
 									publish_date: date,
 									pages: req.body.pages,
+									book_type: req.body.book_type,
 								};
 								productModel
 									.insertProduct(product, detail)
@@ -83,5 +85,15 @@ module.exports = {
 				}
 			}
 		});
+	},
+	// @Method GET
+	getAllBookByType: (req, res) => {
+		const { book_type } = req.query;
+		productModel
+			.getAllBookByType(book_type)
+			.then(result => {
+				res.json(result);
+			})
+			.catch(err => res.json(err));
 	},
 };
