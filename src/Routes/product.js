@@ -3,6 +3,19 @@ const productController = require('../Controllers/product');
 
 const Router = express.Router();
 
-Router.get('/', productController.getAllProduct);
+// GET http://localhost:9600/v1/api/product/category?cat_name=NamaCategory
+// @DESC Get Product By Category Name
+// PUBLIC <- Acess
+Router.get('/category', productController.getAllProductByCatName);
+
+// GET http://localhost:9600/v1/api/product/genre?genre=NamaGenre
+// @DESC Get Product By Category Name
+// PUBLIC <- Acess
+Router.get('/genre', productController.getAllProductByGenre);
+
+// POST  http://localhost:9600/v1/api/product/
+// @DESC Get Product By Category Name
+// ADMIN <- Acces
+Router.post('/', productController.insertProduct);
 
 module.exports = Router;
