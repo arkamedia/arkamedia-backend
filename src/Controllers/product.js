@@ -28,10 +28,10 @@ module.exports = {
 	insertProduct: (req, res) => {
 		upload.single('imgurl')(req, res, async err => {
 			if (err) {
-				res.status(404).json({ msg: err });
+				res.status(400).json({ msg: err });
 			} else {
 				if (req.file == undefined) {
-					res.status(404).json({ msg: 'No File Selected' });
+					res.status(400).json({ msg: 'No File Selected' });
 				} else {
 					try {
 						console.log(req.file.path);
@@ -91,7 +91,7 @@ module.exports = {
 		const date = moment().format('YYYY-MM-DD');
 		upload.single('imgurl')(req, res, err => {
 			if (err) {
-				res.status(404).json({ msg: err });
+				res.status(400).json({ msg: err });
 			} else {
 				if (req.file == undefined) {
 					req.file = req.body.imgurl;
