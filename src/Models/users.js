@@ -1,4 +1,5 @@
 const db = require('../Configs/db');
+const allQuery = require('../Helpers/query');
 
 module.exports = {
 	// @route POST
@@ -44,10 +45,21 @@ module.exports = {
 		});
 	},
 	// @route GET
-	getUserOrder: id => {
+	getUserCartOrder: id => {
 		return new Promise((resolve, reject) => {
-			const query = `SELECT U.user_id, P.product_name, P.imgurl, P.quantity, P.price, P.description , D.weight, D.author , O.ord_id, O.ord_date, O.product_id, O.price, O.quantity FROM user U JOIN ord O ON U.user_id=O.user_id JOIN product P ON O.product_id=P.product_id JOIN detail D ON P.detail_id=D.detail_id WHERE U.user_id = ?`;
-
+			const query = allQuery.getUserCartOrder;
+			db.query(query, [id], (err, result) => {
+				if (!err) {
+					resolve(result);
+				} else {
+					reject(err);
+				}
+			});
+		});
+	},
+	getGrandTotal: id => {
+		return new Promise((resolve, reject) => {
+			const query = allQuery.grandTotalOrder;
 			db.query(query, [id], (err, result) => {
 				if (!err) {
 					resolve(result);

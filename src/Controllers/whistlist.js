@@ -14,7 +14,7 @@ module.exports = {
 					.then(result => {
 						if (result.length === 0) {
 							res.status(404).json({
-								msg: 'Whist list is empty',
+								msg: 'Wishlist is empty',
 							});
 						} else {
 							res.json(result);

@@ -40,7 +40,6 @@ module.exports = {
 								jwt.sign(
 									{ response: response[0] },
 									process.env.SECRET_KEY,
-									{ expiresIn: 1440 },
 									(err, token) => {
 										res.json(token);
 									}
@@ -114,13 +113,55 @@ module.exports = {
 	},
 
 	// @route GET
-	getUserOrder: (req, res) => {
-		const { user_id } = req.params;
-		userModel
-			.getUserOrder(user_id)
-			.then(response => {
-				res.json(response);
-			})
-			.catch(err => res.json(err));
+	getUserOrder: (req, res, next) => {
+		jwt.verify(req.token, process.env.SECRET_KEY, async (err, data) => {
+			if (err) {
+				res.sendStatus(403);
+			} else {
+				const { user_id } = data.response;
+
+				let rslt = {};
+				let total = {};
+
+				try {
+					await userModel
+						.getUserCartOrder(user_id)
+						.then(async result => {
+							if (result.length === 0) {
+								res.status(404).json({
+									msg: 'Order is empty',
+								});
+							} else {
+								rslt = result;
+								await userModel
+									.getGrandTotal(user_id)
+									.then(grand => {
+										if (result.length === 0) {
+											res.status(404).json({
+												msg: 'Order is empty',
+											});
+										} else {
+											total = grand[0];
+										}
+									})
+									.catch(err => {
+										res.json(err);
+									});
+							}
+						})
+						.catch(err => {
+							res.json(err);
+						});
+
+					let finalResult = {
+						result: rslt,
+						total: total.Grand,
+					};
+					res.json(finalResult);
+				} catch (error) {
+					next(err);
+				}
+			}
+		});
 	},
 };
