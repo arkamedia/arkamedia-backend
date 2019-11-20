@@ -9,7 +9,7 @@ const Router = express.Router();
 Router.get('/category', productController.getAllProductByCatName);
 
 // GET http://localhost:9600/v1/api/product/genre?genre=NamaGenre (Cth: Fantasy)
-// @DESC Get Product By Category Name
+// @DESC Get Product By Genre
 // PUBLIC <- Acess
 Router.get('/genre', productController.getAllProductByGenre);
 
@@ -22,5 +22,15 @@ Router.get('/book', productController.getAllBookByType);
 // @DESC Get Product By Category Name
 // ADMIN <- Acces
 Router.post('/', productController.insertProduct);
+
+// PATCH   http://localhost:9600/v1/api/product/idproduct
+// @DESC Update Product
+// ADMIN <- Acces
+Router.patch('/:id', productController.updateProduct);
+
+// DELETE    http://localhost:9600/v1/api/product/idproduct
+// @DESC DELETE  Product
+// ADMIN <- Acces
+Router.delete('/:id', productController.deleteProduct);
 
 module.exports = Router;

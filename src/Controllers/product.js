@@ -86,6 +86,101 @@ module.exports = {
 			}
 		});
 	},
+	// @Method PATCH
+	updateProduct: (req, res) => {
+		const date = moment().format('YYYY-MM-DD');
+		upload.single('imgurl')(req, res, err => {
+			if (err) {
+				res.status(404).json({ msg: err });
+			} else {
+				if (req.file == undefined) {
+					req.file = req.body.imgurl;
+					console.log(req.file);
+
+					const product = {
+						product_name: req.body.product_name,
+						imgurl: req.file,
+						cat_name: req.body.cat_name,
+						quantity: req.body.quantity,
+						price: req.body.price,
+						description: req.body.description,
+					};
+					const detail = {
+						weight: req.body.weight,
+						width: req.body.width,
+						height: req.body.height,
+						ISBN: req.body.ISBN,
+						publisher: req.body.publisher,
+						pages: req.body.pages,
+						genre: req.body.genre,
+						author: req.body.author,
+						import: req.body.import,
+						publish_date: date,
+						pages: req.body.pages,
+						book_type: req.body.book_type,
+					};
+
+					productModel
+						.updateProduct(product, detail, parseInt(req.params.id))
+						.then(result => {
+							console.log(result);
+							res.status(200).json({
+								msg: 'Succes Update Product',
+								result: [product, detail],
+							});
+						})
+						.catch(err => {
+							res.json(err);
+							console.log(product, detail);
+						});
+				} else {
+					try {
+						console.log(req.file.path);
+						cloudinary.uploader
+							.upload(req.file.path, { folder: 'arkamedia' })
+							.then(result => {
+								const product = {
+									product_name: req.body.product_name,
+									imgurl: result.url ? result.url : req.body.imgurl,
+									cat_name: req.body.cat_name,
+									quantity: req.body.quantity,
+									price: req.body.price,
+									description: req.body.description,
+								};
+								const detail = {
+									weight: req.body.weight,
+									width: req.body.width,
+									height: req.body.height,
+									ISBN: req.body.ISBN,
+									publisher: req.body.publisher,
+									pages: req.body.pages,
+									genre: req.body.genre,
+									author: req.body.author,
+									import: req.body.import,
+									publish_date: date,
+									pages: req.body.pages,
+									book_type: req.body.book_type,
+								};
+								productModel
+									.updateProduct(product, detail, parseInt(req.params.id))
+									.then(result => {
+										console.log(result);
+										res.status(200).json({
+											msg: 'Succes Update Product',
+											result: [product, detail],
+										});
+									})
+									.catch(err => res.json(err));
+							});
+					} catch (err) {
+						res.json({
+							err: 'Cannot Upload File',
+						});
+					}
+				}
+			}
+		});
+	},
 	// @Method GET
 	getAllBookByType: (req, res) => {
 		const { book_type } = req.query;
@@ -95,5 +190,20 @@ module.exports = {
 				res.json(result);
 			})
 			.catch(err => res.json(err));
+	},
+	deleteProduct: (req, res) => {
+		const { id } = req.params;
+
+		productModel
+			.deleteProduct(id)
+			.then(result => {
+				res.json({
+					msg: 'Success Delete',
+				});
+				console.log(result);
+			})
+			.catch(err => {
+				res.json(err);
+			});
 	},
 };
