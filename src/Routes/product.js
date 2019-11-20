@@ -14,12 +14,12 @@ Router.get('/category', productController.getAllProductByCatName);
 Router.get('/genre', productController.getAllProductByGenre);
 
 // GET http://localhost:9600/v1/api/product/book?book_type=NamaType (Cth: Novel)
-// @DESC Get Product By Category Name
+// @DESC Get Book By Type (Cth: Novel)
 // PUBLIC <- Acess
 Router.get('/book', productController.getAllBookByType);
 
 // POST  http://localhost:9600/v1/api/product/
-// @DESC Get Product By Category Name
+// @DESC Add Product
 // ADMIN <- Acces
 Router.post('/', productController.insertProduct);
 

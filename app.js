@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-// const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 
 const app = express();
 const PORT = process.env.PORT || 9600;
@@ -10,11 +10,11 @@ const logger = require('morgan');
 
 // Use
 
+app.use(express.static('./public'));
 app.use(logger('dev'));
 app.use(cors());
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static('./public'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/v1', router);
 
 app.get('/', (req, res) => {
