@@ -27,4 +27,5 @@ module.exports = {
     JOIN detail D 
     ON P.detail_id = D.detail_id 
     WHERE D.book_type = ?`,
+	deleteProduct: `DELETE product , detail FROM detail JOIN product ON product.detail_id= detail.detail_id WHERE product.product_id = ?`,
 };

@@ -54,7 +54,6 @@ module.exports = {
 										db.rollback(() => console.log(e));
 									}
 									console.log('Completed');
-									db.end();
 								});
 							} else {
 								reject(err);
@@ -67,11 +66,64 @@ module.exports = {
 			// End Transaction
 		});
 	},
+	// @Method PATCH
+	updateProduct: (product, detail, id) => {
+		return new Promise((resolve, reject) => {
+			// Start Transaction
+			db.beginTransaction(error => {
+				if (error) {
+					console.log(error);
+				} else {
+					const query = 'UPDATE product SET ? WHERE product_id = ?';
+					db.query(query, [product, id], (err, result) => {
+						if (!err) {
+							resolve(result);
+						} else {
+							reject(err);
+							db.rollback(e => console.log(e));
+						}
+
+						db.query(
+							'UPDATE detail SET ? WHERE detail_id = ?',
+							[detail, id],
+							(err, result) => {
+								if (!err) {
+									resolve(result);
+									db.commit(e => {
+										if (err) {
+											db.rollback(() => console.log(e));
+										}
+										console.log('Completed');
+									});
+								} else {
+									reject(err);
+									db.rollback(e => console.log(e));
+								}
+							}
+						);
+					});
+				}
+			});
+			// End Transaction
+		});
+	},
 	// @Method GET
 	getAllBookByType: book_type => {
 		return new Promise((resolve, reject) => {
 			const query = allQuery.getAllBookByType;
 			db.query(query, [book_type], (err, result) => {
+				if (!err) {
+					resolve(result);
+				} else {
+					reject(err);
+				}
+			});
+		});
+	},
+	deleteProduct: id => {
+		return new Promise((resolve, reject) => {
+			const query = allQuery.deleteProduct;
+			db.query(query, [id], (err, result) => {
 				if (!err) {
 					resolve(result);
 				} else {
